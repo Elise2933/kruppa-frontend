@@ -10,9 +10,24 @@ export default function SignUpScreen({ navigation }) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const handleUsernameInputChange = value => setUsername(value);
-    const handleEmailInputChange = value => setEmail(value);
+    const [emptyField, SetEmptyField] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    
+    const handleUsernameInputChange = value => {
+        setUsername(value);
+    };
+    const handleEmailInputChange = value => {
+        setEmail(value);
+       /*  if (EMAIL_REGEX.test(email)) {
+            
+        }; */
+     };
+
     const handlePasswordInputChange = value => setPassword(value);
+    
 
     const handlePressPrimaryButton = () => {
 
@@ -34,19 +49,21 @@ export default function SignUpScreen({ navigation }) {
                 setEmail('');
                 setPassword(''); 
                  navigation.navigate('SignUpProfile');              
+              } else {
+                SetEmptyField(true);
+                setErrorMessage ('Required fields should be filled out');
               }
             });  
     }
 
     return (     
             
-       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        
+        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
              {/* <Image  source={require('')} style={styles.image}/> */}  
             <View style={styles.inputContainer}>
             
              <Text style={styles.title}>Welcome to Kruppa</Text>
-                <TextInput style={styles.fieldName}>username</TextInput>
+                <Text style={styles.fieldName}>username</Text>
                 <StandardFormInput
                     placeholder="username"        
                     value={username}
@@ -68,9 +85,10 @@ export default function SignUpScreen({ navigation }) {
                     value={password}
                     handleChange={handlePasswordInputChange}
                 />
+                <Text style={styles.errorInput}>{errorMessage}</Text>
                </View>  
-              
                 <PrimaryButton
+                    
                     text='Sign Up'
                     onPress={() => handlePressPrimaryButton()}
                 />
@@ -81,10 +99,11 @@ export default function SignUpScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
+        /* flexDirection: 'column', */
         alignItems: 'center',
-        justifyContent: 'center',
+       /*  justifyContent: 'center', */
         backgroundColor: '#251E1E',
+       
           
     },
 
@@ -94,7 +113,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center', 
         height: '100%',
         width: '100%', 
-        marginBottom :'29%',
+        paddingBottom : '40%',
+      
     },
 
     image: {
@@ -107,7 +127,7 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: "bold",
         color: '#F0F0F0',
-        marginBottom: '20%',
+        marginBottom: '15%',
     },
 
     fieldName: {
@@ -117,6 +137,12 @@ const styles = StyleSheet.create({
         marginBottom: '-3%',
         marginLeft: '-65%',
         fontSize: 14,        
+    },
+
+    errorInput: {
+        fontSize : '12',
+        color : 'red',
+
     },
 
     input: {
